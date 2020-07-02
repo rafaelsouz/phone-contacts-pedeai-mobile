@@ -1,8 +1,10 @@
 import React, {
   useEffect,
   useRef,
+  useState,
   useImperativeHandle,
   forwardRef,
+  useCallback,
 } from 'react';
 import { TextInputProps } from 'react-native';
 import { useField } from '@unform/core';
@@ -27,9 +29,24 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
   ref,
 ) => {
   const inputElementRef = useRef<any>(null);
+
   // Propriedades necessarias para registrar o input no unform
   const { registerField, defaultValue = '', fieldName, error } = useField(name);
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false);
+
+    // Se o input tiver preenchido, set o Filled como true senão false
+    setIsFilled(!!inputValueRef.current.value);
+  }, []);
 
   // Passando para componente pai, a função focus
   useImperativeHandle(ref, () => ({
@@ -48,14 +65,21 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
   }, [fieldName, registerField]);
 
   return (
-    <Container>
-      <Icon name={icon} size={20} color="#9c9a97" />
+    <Container isFocused={isFocused}>
+      <Icon
+        name={icon}
+        size={20}
+        // Pinta o icone se o input tiver preenchido ou com foco
+        color={isFocused || isFilled ? '#ff3030' : '#9c9a97'}
+      />
 
       <TextInput
         ref={inputElementRef}
         keyboardAppearance="dark"
         placeholderTextColor="#9c9a97"
         defaultValue={defaultValue}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         onChangeText={value => {
           inputValueRef.current.value = value;
         }}
