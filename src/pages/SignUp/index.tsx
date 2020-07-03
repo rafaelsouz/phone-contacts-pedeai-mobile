@@ -16,6 +16,7 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 
 import Icon from 'react-native-vector-icons/Feather';
+import api from '../../services/api';
 
 import logoImg from '../../assets/logo.png';
 
@@ -56,11 +57,11 @@ const SignUp: React.FC = () => {
           abortEarly: false,
         });
 
-        // await api.post('/users', data);
+        await api.post('/users', data);
 
         Alert.alert(
           'Cadastro realizada com sucesso!',
-          'Você já pode fazer logon no GoBarber',
+          'Você já pode fazer login no PedeAiContacts',
         );
 
         navigation.goBack();

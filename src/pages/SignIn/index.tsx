@@ -16,6 +16,8 @@ import { FormHandles } from '@unform/core';
 
 import * as Yup from 'yup';
 
+import api from '../../services/api';
+
 import logoImg from '../../assets/logo.png';
 
 import Input from '../../components/Input';
