@@ -49,20 +49,24 @@ export const ContactContainer = styled(RectButton)`
   flex-direction: row;
   align-items: center;
 `;
+
 export const ContactInfo = styled.View`
   flex: 1;
   margin-left: 20px;
 `;
+
 export const ContactName = styled.Text`
   font-family: sans-serif;
   font-size: 18px;
   color: #f4ede8;
 `;
+
 export const ContactMeta = styled.View`
   flex-direction: row;
   align-items: center;
   margin-top: 8px;
 `;
+
 export const ContactMetaText = styled.Text`
   margin-left: 8px;
   color: #999591;

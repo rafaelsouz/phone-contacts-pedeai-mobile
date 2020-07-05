@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
   const { navigate } = useNavigation();
 
   useEffect(() => {
-    api.get('contacts').then(response => {
+    api.get('/contacts').then(response => {
       setContacts(response.data);
     });
   }, []);
