@@ -57,10 +57,18 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
 
   useEffect(() => {
     // registrando o input no unform
-    registerField({
+    registerField<string>({
       name: fieldName,
       ref: inputValueRef.current,
       path: 'value',
+      setValue(refe: any, value) {
+        inputValueRef.current.value = value;
+        inputElementRef.current.setNativeProps({ text: value });
+      },
+      clearValue() {
+        inputValueRef.current.value = '';
+        inputElementRef.current.clear();
+      },
     });
   }, [fieldName, registerField]);
 
