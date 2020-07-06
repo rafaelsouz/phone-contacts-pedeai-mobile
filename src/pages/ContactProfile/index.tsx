@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Linking,
+} from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -32,7 +37,7 @@ export interface Contact {
 }
 
 const ContactProfile: React.FC = () => {
-  const { navigate, goBack } = useNavigation();
+  const { navigate, goBack, addListener } = useNavigation();
   const route = useRoute();
   const { contactId } = route.params as RouteParams;
 
@@ -50,10 +55,12 @@ const ContactProfile: React.FC = () => {
   }, [goBack]);
 
   useEffect(() => {
-    api.get(`/contacts/${contactId}`).then(response => {
-      setContact(response.data);
+    addListener('focus', () => {
+      api.get(`/contacts/${contactId}`).then(response => {
+        setContact(response.data);
+      });
     });
-  }, [contactId]);
+  }, [contactId, addListener]);
 
   return (
     <>
@@ -99,7 +106,13 @@ const ContactProfile: React.FC = () => {
                 Editar
               </Button>
 
-              <Button onPress={() => {}}>Ligar</Button>
+              <Button
+                onPress={() => {
+                  Linking.openURL(`tel:${contact.phone}`);
+                }}
+              >
+                Ligar
+              </Button>
             </ContactContainer>
           </Container>
         </ScrollView>
