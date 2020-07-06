@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import { Linking } from 'react-native';
 import api from '../../services/api';
 
 import { useAuth } from '../../hooks/auth';
@@ -12,12 +13,18 @@ import {
   HeaderTitle,
   UserName,
   ContactsList,
+  ContainerItem,
   ContactContainer,
   ContactName,
   ContactInfo,
   ContactMeta,
   ContactMetaText,
   ContactsListTitle,
+  ButtonNewContact,
+  ContainerActionsButton,
+  ButtonToAction,
+  ButtonToActionText,
+  ButtonLogout,
 } from './styles';
 
 export interface Contact {
@@ -32,13 +39,15 @@ const Dashboard: React.FC = () => {
 
   const [contacts, setContacts] = useState<Contact[]>([]);
 
-  const { navigate } = useNavigation();
+  const { navigate, addListener } = useNavigation();
 
   useEffect(() => {
-    api.get('/contacts').then(response => {
-      setContacts(response.data);
+    addListener('focus', () => {
+      api.get('/contacts').then(response => {
+        setContacts(response.data);
+      });
     });
-  }, []);
+  }, [addListener]);
 
   const navigateToContactProfile = useCallback(
     (contactId: string) => {
@@ -46,6 +55,17 @@ const Dashboard: React.FC = () => {
     },
     [navigate],
   );
+
+  const navigateToEditContact = useCallback(
+    (contactId: string) => {
+      navigate('EditContact', { idContact: contactId });
+    },
+    [navigate],
+  );
+
+  const navigateToCreateContact = useCallback(() => {
+    navigate('CreateContact');
+  }, [navigate]);
 
   return (
     <Container>
@@ -55,6 +75,14 @@ const Dashboard: React.FC = () => {
           {'\n'}
           <UserName>{user.name}</UserName>
         </HeaderTitle>
+
+        <ButtonLogout
+          onPress={() => {
+            signOut();
+          }}
+        >
+          <Icon name="log-out" size={28} color="#ff3030" />
+        </ButtonLogout>
       </Header>
 
       <ContactsList
@@ -62,27 +90,57 @@ const Dashboard: React.FC = () => {
         keyExtractor={contact => contact.id}
         ListHeaderComponent={<ContactsListTitle>Contatos</ContactsListTitle>}
         renderItem={({ item: contact }) => (
-          <ContactContainer
-            onPress={() => {
-              navigateToContactProfile(contact.id);
-            }}
-          >
-            <ContactInfo>
-              <ContactName>{contact.name}</ContactName>
+          <ContainerItem>
+            <ContactContainer
+              onPress={() => {
+                navigateToContactProfile(contact.id);
+              }}
+            >
+              <ContactInfo>
+                <ContactName>{contact.name}</ContactName>
 
-              <ContactMeta>
-                <Icon name="user" size={14} color="#ff3030" />
-                <ContactMetaText>{contact.email}</ContactMetaText>
-              </ContactMeta>
+                <ContactMeta>
+                  <Icon name="user" size={14} color="#ff3030" />
+                  <ContactMetaText>{contact.email}</ContactMetaText>
+                </ContactMeta>
 
-              <ContactMeta>
-                <Icon name="phone" size={14} color="#ff3030" />
-                <ContactMetaText>{contact.phone}</ContactMetaText>
-              </ContactMeta>
-            </ContactInfo>
-          </ContactContainer>
+                <ContactMeta>
+                  <Icon name="phone" size={14} color="#ff3030" />
+                  <ContactMetaText>{contact.phone}</ContactMetaText>
+                </ContactMeta>
+              </ContactInfo>
+            </ContactContainer>
+
+            <ContainerActionsButton>
+              <ButtonToAction
+                onPress={() => {
+                  Linking.openURL(`tel:${contact.phone}`);
+                }}
+              >
+                <Icon name="phone-call" size={18} color="#ff3030" />
+                <ButtonToActionText>Chamar</ButtonToActionText>
+              </ButtonToAction>
+
+              <ButtonToAction
+                onPress={() => {
+                  navigateToEditContact(contact.id);
+                }}
+              >
+                <Icon name="edit-2" size={18} color="#ff3030" />
+                <ButtonToActionText>Editar</ButtonToActionText>
+              </ButtonToAction>
+            </ContainerActionsButton>
+          </ContainerItem>
         )}
       />
+
+      <ButtonNewContact
+        onPress={() => {
+          navigateToCreateContact();
+        }}
+      >
+        <Icon name="user-plus" size={28} color="#ff3030" />
+      </ButtonNewContact>
     </Container>
   );
 };
