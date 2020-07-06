@@ -1,24 +1,32 @@
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 export const Container = styled.View`
   flex: 1;
-
-  justify-content: center;
-  padding: 0 30px ${Platform.OS === 'android' ? 80 : 40}px;
-  position: relative;
 `;
 
-export const Title = styled.Text`
-  font-size: 24px;
-  color: #fff;
+export const Header = styled.View`
+  padding: 24px;
+  padding-top: ${getStatusBarHeight()}px;
+  background: #28262e;
+
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const BackButtom = styled.TouchableOpacity``;
+
+export const HeaderTitle = styled.Text`
+  color: #f5ede8;
   font-family: sans-serif;
-  margin: 54px 0 24px;
+  font-size: 24px;
+  margin-left: 16px;
 `;
 
-export const BackButtom = styled.TouchableOpacity`
-  position: absolute;
-  top: 64px;
-  left: 24px;
+export const FormContainer = styled.View`
+  padding: 0 30px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
 `;

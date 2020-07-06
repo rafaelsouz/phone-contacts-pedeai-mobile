@@ -24,7 +24,13 @@ import Button from '../../components/Button';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import { Container, Title, BackButtom } from './styles';
+import {
+  Container,
+  Header,
+  HeaderTitle,
+  BackButtom,
+  FormContainer,
+} from './styles';
 
 export interface Contact {
   id: string;
@@ -98,6 +104,8 @@ const EditContact: React.FC = () => {
   useEffect(() => {
     api.get(`/contacts/${idContact}`).then(response => {
       setContact(response.data);
+
+      formRef.current?.setData(response.data);
     });
   }, [idContact]);
 
@@ -113,62 +121,63 @@ const EditContact: React.FC = () => {
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
         >
           <Container>
-            <BackButtom
-              onPress={() => {
-                handleGoBack();
-              }}
-            >
-              <Icon name="chevron-left" size={24} color="#999591" />
-            </BackButtom>
-            <View>
-              <Title>Editar contato</Title>
-            </View>
-
-            <Form initialData={contact} ref={formRef} onSubmit={handleUpdate}>
-              <Input
-                name="name"
-                icon="user"
-                placeholder="Nome"
-                autoCapitalize="words"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  emailInputRef.current?.focus();
-                }}
-              />
-              <Input
-                ref={emailInputRef}
-                name="email"
-                icon="mail"
-                placeholder="E-mail"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  phoneInputRef.current?.focus();
-                }}
-              />
-
-              <Input
-                ref={phoneInputRef}
-                name="phone"
-                icon="phone"
-                placeholder="Telefone"
-                keyboardType="phone-pad"
-                returnKeyType="send"
-                onSubmitEditing={() => {
-                  formRef.current?.submitForm();
-                }}
-              />
-
-              <Button
+            <Header>
+              <BackButtom
                 onPress={() => {
-                  formRef.current?.submitForm();
+                  handleGoBack();
                 }}
               >
-                Confirmar mudanças
-              </Button>
-            </Form>
+                <Icon name="chevron-left" size={26} color="#999591" />
+              </BackButtom>
+              <HeaderTitle>Editar contato</HeaderTitle>
+            </Header>
+            <FormContainer>
+              <Form initialData={contact} ref={formRef} onSubmit={handleUpdate}>
+                <Input
+                  name="name"
+                  icon="user"
+                  placeholder="Nome"
+                  autoCapitalize="words"
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    emailInputRef.current?.focus();
+                  }}
+                />
+                <Input
+                  ref={emailInputRef}
+                  name="email"
+                  icon="mail"
+                  placeholder="E-mail"
+                  keyboardType="email-address"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    phoneInputRef.current?.focus();
+                  }}
+                />
+
+                <Input
+                  ref={phoneInputRef}
+                  name="phone"
+                  icon="phone"
+                  placeholder="Telefone"
+                  keyboardType="phone-pad"
+                  returnKeyType="send"
+                  onSubmitEditing={() => {
+                    formRef.current?.submitForm();
+                  }}
+                />
+
+                <Button
+                  onPress={() => {
+                    formRef.current?.submitForm();
+                  }}
+                >
+                  Confirmar mudanças
+                </Button>
+              </Form>
+            </FormContainer>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
