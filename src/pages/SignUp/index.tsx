@@ -60,7 +60,7 @@ const SignUp: React.FC = () => {
         await api.post('/users', data);
 
         Alert.alert(
-          'Cadastro realizada com sucesso!',
+          'Cadastro realizado com sucesso!',
           'Você já pode fazer login no PedeAiContacts',
         );
 
@@ -75,7 +75,7 @@ const SignUp: React.FC = () => {
         }
 
         Alert.alert(
-          'Erro no cadastro',
+          `Erro no cadastro ${err}`,
           'Ocorreu um erro ao fazer cadastro, tente novamente.',
         );
       }
