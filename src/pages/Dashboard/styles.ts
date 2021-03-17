@@ -67,7 +67,7 @@ export const ContactContainer = styled(RectButton)`
 
 export const ContactInfo = styled.View`
   flex: 1;
-  margin-left: 20px;
+  margin-left: 5px;
 `;
 
 export const ContactName = styled.Text`
